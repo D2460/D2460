@@ -1,23 +1,45 @@
-const express = require('express');
+const  express  = require("express");
+const userController = require("../controllers/userController");
+const reviewController = require("../controllers/reviewController")
+const bookController = require("../controllers/bookController")
+const middleWare = require("../middleWare/auth")
 const router = express.Router();
-const blogController= require("../controllers/blogController")
-const authorController= require("../controllers/authorController")
-const middleware= require("../middleware/auth")
 
 
+router.post("/register",userController.createUser)
+
+router.post("/login",userController.loginUser)
 
 
+router.post("/books", middleWare.authenticate, bookController.createBook)
 
-router.post("/authors",  authorController.createAuthor)
-router.post("/login", authorController.loginAuthor)
-router.post("/blogs",  middleware.authenticate,   blogController.createBlog)
-router.get("/blogs", middleware.authenticate,    blogController.getBlogs)
-router.put("/blogs/:blogId",  middleware.authenticate,  middleware.authorize,  blogController.updateBlog) 
-router.delete("/blogs/:blogId",  middleware.authenticate, middleware.authorize, blogController.deleteBlog)
-router.delete("/blogs",  middleware.authenticate, middleware.authorize, blogController.deleteBlogByQuery)
+router.get("/books", middleWare.authenticate, bookController.getBooks)
+
+router.get("/books/:bookId",middleWare.authenticate,bookController.getById)
+
+router.put("/books/:bookId",middleWare.authenticate,middleWare.authorize,bookController.updateById)
+
+router.delete("/books/:bookId",middleWare.authenticate,middleWare.authorize,bookController.deleteBookById)
+
+
+router.post("/books/:bookId/review",reviewController.createReview)
+
+router.put("/books/:bookId/review/:reviewId",reviewController.updateReview)
+
+router.delete("/books/:bookId/review/:reviewId",reviewController.deleteReview)
 
 
 
 
 
 module.exports = router
+
+
+
+
+
+
+
+
+
+
